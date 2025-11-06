@@ -23,14 +23,16 @@ export default allowCors(async (req, res) => {
   }
 
   const { key, value } = req.body;
-
   if (!key || !value) {
     return res.status(400).send('Missing key or value');
   }
 
   try {
+    const old_value = await redis.get(key);
+    if (old_value !== null) {
+      await redis.set(key+'_old_'+Date.now(), old_value, 'EX', 60*60*24);
+    }
     await redis.set(key, value);
-    console.log(key,value);
     res.status(200).json({ success: true, message: `Key '${key}' set to '${value}'` });
   } catch (error) {
     console.error('Redis SET error:', error);
