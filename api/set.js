@@ -30,6 +30,7 @@ export default allowCors(async (req, res) => {
 
   try {
     await redis.set(key, value);
+    console.log(key,value);
     res.status(200).json({ success: true, message: `Key '${key}' set to '${value}'` });
   } catch (error) {
     console.error('Redis SET error:', error);

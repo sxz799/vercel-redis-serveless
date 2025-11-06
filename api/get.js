@@ -31,6 +31,7 @@ export default allowCors(async (req, res) => {
   try {
     const value = await redis.get(key);
     if (value !== null) {
+      console.log(key,value);
       res.status(200).json({ success: true, key, value });
     } else {
       res.status(404).json({ success: false, message: `Key '${key}' not found` });
